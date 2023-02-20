@@ -1,0 +1,437 @@
+%% Options:
+%% twocolumn : Two column layout.
+%% hf: enable header and footer.
+\documentclass[hf]{ceurart}
+
+\usepackage{longtable}
+\usepackage{caption}
+\setlength{\parindent}{0cm}
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+\conference{Private and Confidential\\ Version 1.0}
+
+%%
+%% The "title" command
+\title{Dataset Specification - Salford Dataset}
+\title[mode=sub]{Predicting Acute Clinical Deterioration with Interpretable Machine Learning to support Emergency Care Decision Making}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+\author[1]{Stelios Boulitsakis Logothetis}
+\author[2,3]{Darren Green}
+\author[4]{Mark Holland}
+\author[1,5]{Noura Al Moubayed}
+\address[1]{Department of Computer Science, University of Durham, Durham, United Kingdom}
+\address[2]{Northern Care Alliance NHS Foundation Trust, Department of Renal Medicine, Manchester, United Kingdom}
+\address[3]{Division of Cardiovascular Sciences, University of Manchester, Manchester, United Kingdom}
+\address[4]{School of Clinical and Biomedical Sciences, University of Bolton, United Kingdom}
+\address[5]{Evergreen Life Ltd, Manchester, United Kingdom}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Dataset Overview}
+\captionsetup[table]{labelformat=empty}
+\begin{table}[htbp]
+\renewcommand{\arraystretch}{1.2}
+\centering
+\caption{\textbf{Feature Summary}}
+\begin{tabular}{l p{9cm}}
+\toprule
+\textbf{Category} & \textbf{Features} \\
+\midrule
+\textbf{Spell Information} & Admission \& Discharge Timestamp, Total Length of Stay (LOS), Admission Pathway, Admission Specialty, Ward Utilisation, LOS per Ward, 30-day Readmission, For Resuscitation\\
+\textbf{Outcomes} & Death During Stay, Death 30 Days Post-Disch, Critical Care \\
+\textbf{Demographics} & Age, Sex, Ethnicity, From Care Home \\
+\textbf{NEWS Score} & Respiratory Rate Score, Breathing Device Score, O2 Sat Score, Temperature Score,  Diastolic Blood Pressure Score, Level of Consciousness Score, NEWS Score \\
+\textbf{Lab Results} & Haemoglobin, Urea (serum), Sodium (serum), Potassium (serum), Creatinine, D-Dimer, Albumin, White Blood Cells, Venous pCO2 (VBG), Venous PH (VBG), Venous PO2 (VBG)\\
+\textbf{Composite Scores} & Clinical Frailty Score, Waterlow Score\\
+\textbf{Diagnoses \& Procedures} & Coded diagnoses (ICD-10), Procedures (OPCS-4) \\
+\textbf{Emergency Department} & Presenting Complaint, ED Diagnosis, Triage Note\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\renewcommand{\arraystretch}{1.2}
+    \centering
+    \caption{\textbf{Key Characteristics}}
+    \begin{tabular}{l l l}
+        \toprule
+        Parameter            & Category              & $n\;(\%)$           \\
+        \midrule
+        Population & & $401,452$ \\
+        Sex                  & Female                & $210,494\;(52.43\%)$  \\
+        Admission Method     & Emergency A\&E        & $278,262\;(69.31\%)$ \\
+                             & Booked Admission & $46,181\;(11.50\%)$     \\
+        Admission Ward       & EAU                   & $104,331\;(25.98\%)$  \\
+                             & AEC                   & $37,143\;(9.25\%)$  \\
+                             & CCU         & $5,996\;(1.41\%)$     \\
+        NEWS at Admission   & Low ($0-4$)           & $272,117\;(67.78\%)$  \\
+                             & Medium ($5-6$)        & $9,528\;(2.37\%)$    \\
+                             & High ($\geq 7$)       & $5,498\;(1.37\%)$    \\
+        Mortality            & During Stay      & $12,173\;(3.03\%)$    \\
+                             & 30 Days Post-Disch.   & $8,409\;(2.09\%)$    \\
+        Critical Care        & Total &           $13,225\;(3.29\%)$\\
+                             & Post-Admission  & $7,028\;(1.75\%)$    \\
+        30-Day Readmissions  &                 & $57,150\;(14.24\%)$    \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\newpage
+\clearpage
+\section{Collected Features}
+LOS: Length of Stay, BP: Blood Pressure, Proc: Procedure, Diag: Diagnosis. 
+
+Cat: Categorical, DT: Date-Time (Timestamp), Text: Unstructured Text.
+\setlength{\LTleft}{-20cm plus -1fill}
+\setlength{\LTright}{\LTleft}
+\begin{longtable}{llllcccc}
+\hline
+\textbf{Group} & \textbf{Feature} & \textbf{Data Type} & \textbf{Units} & \textbf{Time Series} & \textbf{Derived} & \textbf{Availability} \\ \hline
+\endhead
+
+Admin & Spell Serial & String & & \\
+ & Patient ID & String & & \\
+\\
+ 
+Spell & Admission DT & DT & & & & $100.00\%$ \\
+ & Discharge DT & DT & & & & $100.00\%$ \\
+ & Total LOS & Float & Days & & & $100.00\%$ \\
+ & Admission Pathway & Cat & & & & $100.00\%$ \\
+ & Elective Admission & Bool & & & & $100.00\%$ \\
+ & Admission Specialty & Cat & & & & $100.00\%$ \\
+ & Ward & Cat & & \checkmark & & $100.00\%$\\
+ & Ward LOS & Float & Days & & \checkmark & $100.00\%$\\
+ & 30-Day Readmission & Bool & & & \checkmark & $100.00\%$\\
+ & Last Admission & DT & & & \checkmark & $100.00\%$ \\
+ & For Resuscitation & Bool & & & & $100.00\%$\\
+ & Sent to SDEC & Bool & & & \checkmark & $100.00\%$ \\
+\\
+
+Outcome & Death During Stay & Bool & & & & $100.00\%$\\
+ & Death 30 Days Post-Disch & Bool & & & & $100.00\%$\\
+ & Critical Care & Bool & & & \checkmark & $100.00\%$\\
+ & Critical Event & Bool & & & \checkmark & $100.00\%$\\
+\\
+  
+Demographic & Age & Int & Years & & & $100.00\%$ \\
+ & Sex & Cat & Male/Fem & & & $100.00\%$\\
+ & Ethnicity & Cat & & & & $99.63\%$\\
+ & Care Home & Bool & & & & $100.00\%$\\
+\\
+ 
+NEWS & NEWS Score & Int & 1-18 & \checkmark & \\
+ & NEWS Resp. Rate & Int & 1-3 & \checkmark & \\
+ & NEWS Breath. Dev. & Int & 1-3 & \checkmark & \\
+ & NEWS O2 Sat & Int & 1-3 & \checkmark & \\
+ & NEWS Temperature & Int & 1-3 & \checkmark & \\
+ & NEWS BP & Int & 1-3 & \checkmark & \\
+ & NEWS Pulse & Int & 1-3 & \checkmark & \\
+ & NEWS AVCPU & Int & 1-3 & \checkmark & \\
+\\
+  
+Lab Results & Haemoglobin & Float & g/L & \checkmark & \\
+ & Urea (serum) & Float & mg/dl & \checkmark & \\
+ & Sodium (serum) & Float & mmol/L & \checkmark & \\
+ & Potassium (serum) & Float & mEq/L & \checkmark & \\
+ & Creatinine & Float & µmol/L & \checkmark & \\
+ & D-Dimer & Float & ng/mL FEU & \checkmark & \\
+ & CRP & Float & mg/L & \checkmark & \\
+ & Albumin & Float & g/L & \checkmark & \\
+ & WBC & Float & n$\times 10^9$/L & \checkmark & \\
+\\
+
+VBG & Venous Temperature & Float & $^{\circ}$C & \checkmark & \\
+ & Venous pCO2 & Float & kPa & \checkmark & \\
+ & Venous pH & Float & pH & \checkmark & \\
+ & Venous PO2 & Float & kPa & \checkmark & \\
+\\
+
+Scores & Clinical Frailty Score & Int & 1-9 & & & $10.86\%$ \\
+ & Waterlow Score & Int & 0-64 & & & $70.02\%$ \\
+\\
+ 
+Diagnosis & ICD-10 Diag. (1) & String & ICD-10 & & & $97.07\%$\\
+ & $\vdots$ & & & \\
+ & ICD-10 Diag. (15) & String & ICD-10 & & & $12.02\%$\\
+\\
+ 
+Operations & OPCS-4 Proc. (1) & String & OPCS-4 & & & $42.13\%$ \\
+ & $\vdots$ & & & \\
+ & OPCS-4 Proc. (14) & String & OPCS-4 & & & $0.93\%$ \\
+\\
+  
+Emergency Dept. & Presenting Complaint & String & Text & & & $66.60\%$ \\
+ & ED Diagnosis & String & Text & & & $60.83\%$ \\
+ & Triage Note & String & Text & & & $67.94\%$\\
+ & Arrival Time & DT & & & & $68.30\%$\\
+ & Departure Time & DT & & & & $68.30\%$\\
+ & Patient Group & Cat & & & & $68.30\%$\\
+ \hline
+ 
+\end{longtable}
+
+\newpage
+\clearpage
+
+\section{Derived Features}
+\setlength{\LTleft}{-20cm plus -1fill}
+\setlength{\LTright}{\LTleft}
+\begin{longtable}{llll}
+\hline
+\textbf{Type} & \textbf{Feature} & \textbf{Units/Type} & \textbf{Derived From} \\ \hline
+\endhead
+%
+\hline
+\endfoot
+%
+\endlastfoot
+%
+Outcome & Critical Care & Bool & Ward Utilisation, Ward LOS  \\
+ & Critical Event & Bool & Critical Care, Mortality \\
+ \\
+History & Readmission &  Bool & Patient ID, Admission Date \\
+ & Last Admission & DT & Patient ID,   Admission Date \\
+ \\
+Spell & Sent To SDEC &  Bool & Admission Ward  \\ 
+\hline
+\end{longtable}
+
+\section{Time Series Features}
+\setlength{\LTleft}{-20cm plus -1fill}
+\setlength{\LTright}{\LTleft}
+\begin{longtable}{lcccc}
+\hline
+\textbf{Feature} & \textbf{Availability} \\
+& Admission & 24H Post-Adm & 24H Pre-Disch & Discharge\\ \hline
+\endhead
+%
+\hline
+\endfoot
+%
+\endlastfoot
+%
+NEWS Score & $71.53\%$ & $46.97\%$ & $49.64\%$ & $72.06\%$ \\
+NEWS Resp. Rate & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS Breath. Dev. & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS O2 Sat. & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS Temperature & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS BP & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS Pulse & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+NEWS AVCPU & $67.41\%$ & $44.59\%$ & $47.04\%$ & $68.15\%$ \\
+\\
+Haemoglobin & $79.65\%$ & $13.17\%$ & $3.64\%$ & $39.11\%$ \\
+Urea (serum) & $78.57\%$ & $14.41\%$ & $4.48\%$ & $41.03\%$ \\
+Sodium (serum) & $78.57\%$ & $15.07\%$ & $4.77\%$ & $42.25\%$ \\
+Potassium (serum) & $69.45\%$ & $14.62\%$ & $4.76\%$ & $42.31\%$ \\
+Creatinine & $78.51\%$ & $14.74\%$ & $6.08\%$ & $65.22\%$ \\
+D-Dimer & $5.58\%$ & $0.0\%$ & $0.0\%$ & $0.42\%$ \\
+CRP     & $66.12\%$ & $7.71\%$ & $2.08\%$ & $31.15\%$ \\
+Albumin & $67.23\%$ & $10.64\%$ & $3.1\%$ & $36.62\%$ \\
+WBC & $79.65\%$ & $13.17\%$ & $3.64\%$ & $39.1\%$ \\
+\\
+Venous Temperature & $6.66\%$ & $0.05\%$ & $0.03\%$ & $1.31\%$ \\
+Venous pCO2 & $6.65\%$ & $0.05\%$ & $0.03\%$ & $1.29\%$ \\
+Venous pH & $6.65\%$ & $0.05\%$ & $0.03\%$ & $1.29\%$ \\
+Venous pO2 & $6.64\%$ & $0.05\%$ & $0.03\%$ & $1.29\%$ \\
+\hline
+\end{longtable}
+
+\newpage
+\clearpage
+\section{Example Record (Synthetic)}
+\begin{verbatim}SpellSerial                                                                  12345678
+PatientNumber                                                                  654321
+Female                                                                           True
+Age                                                                                45
+Ethnicity                                                               WHITE BRITISH
+AE_PresentingComplaint                                                   Unwell adult
+AE_MainDiagnosis                              acute renal failure syndrome 
+AE_Arrival                                                        2019-05-20 12:56:00
+AE_Departure                                                      2019-05-20 16:50:00
+AE_Location                                                                 Majors HD
+AE_PatientGroup                                                               MEDICAL
+AE_TriageNote                       Deterioration 2/7. increased lethargy and...
+AdmissionDate                                                     2019-05-20 16:50:00
+DischargeDate                                                     2019-09-15 12:30:00
+Readmission                                                        False
+LastAdmission                                                     2016-05-20 16:50:00
+ElectiveAdmission                                                               False
+AdmitMethod                                                             EMERGENCY A+E
+SentToSDEC                                                        False
+AdmissionSpecialty                                                                AIM
+DischargeSpecialty                                                               UGAS
+TotalLOS                                                                   117.819444
+LOSBand                                                              More than 72 Hrs
+AdmitWard                                                                         EAU
+AdmitWardLOS                                                                 0.318055
+NextWard2                                                                        HH1M
+NextWardLOS2                                                                18.581944
+NextWard3                                                                          L2
+NextWardLOS3                                                                46.251389
+NextWard4                                                                         HH4
+NextWardLOS4                                                                  0.73125
+NextWard5                                                                          L2
+NextWardLOS5                                                                 4.580556
+NextWard6                                                                         CCU
+NextWardLOS6                                                                 6.486806
+NextWard7                                                                         HH4
+NextWardLOS7                                                                19.994444
+NextWard8                                                                        HB2M
+NextWardLOS8                                                                 15.83125
+NextWard9                                                                         HB2
+NextWardLOS9                                                                  5.04375
+DischargeWard                                                                     HB2
+DischargeWardLOS                                                              5.04375
+MainICD10                                                                       T81.4
+MainDiagnosis                       Infection following a procedure, not el...
+SecDiag1                                                                        K56.2
+SecDiag2                                                                        T85.5
+SecDiag3                                                                        T85.7
+SecDiag4                                                                        C92.6
+SecDiag5                                                                        N17.9
+SecDiag6                                                                        E87.0
+SecDiag7                                                                        E86.X
+SecDiag8                                                                        F86.6
+SecDiag9                                                                        G45.7
+SecDiag10                                                                       G10.9
+SecDiag11                                                                       M41.0
+SecDiag12                                                                       E03.3
+SecDiag13                                                                       F78.9
+SecDiag14                                                                       R63.3
+SecDiag15                                                                       L89.9
+MainOPCS4                                                                       T45.4
+MainProcedure                       IMAGE CONTROLLED PERC DRAINAGE LESION...
+SecOper1                                                                        Y53.4
+SecOper2                                                                        G47.5
+SecOper3                                                                        Y05.2
+SecOper4                                                                        C37.1
+SecOper5                                                                        G06.3
+SecOper6                                                                        Y31.1
+SecOper7                                                                        Y97.3
+SecOper8                                                                        Y98.2
+SecOper9                                                                        Z92.6
+SecOper10                                                                       O16.1
+SecOper11                                                                       U21.2
+SecOper12                                                                       Y97.3
+SecOper13                                                                       Y98.2
+SecOper14                                                                       O16.1
+Outcode_Area                                                                      M16
+CareHome                                                                        False
+DiedDuringStay                                                                  False
+DiedWithin30Days                                                                False
+DischargeDestination                                                 NORMAL RESIDENCE
+CFS_score                                                                         7.0
+Waterlow_Score                                                                   17.0
+Waterlow_Outcome                                                        15+ High risk
+HasDNAR                                                                         False
+Blood_Haemoglobin_Admission                                                     190.0
+Blood_Haemoglobin_24HPostAdm                                                    153.0
+Blood_Haemoglobin_24HPreDisch                                                     NaN
+Blood_Haemoglobin_Discharge                                                     112.0
+Blood_Urea_Admission                                                             20.7
+Blood_Urea_24HPostAdm                                                             6.7
+Blood_Urea_24HPreDisch                                                            NaN
+Blood_Urea_Discharge                                                              3.6
+Blood_Sodium_Admission                                                            192
+Blood_Sodium_24HPostAdm                                                           168
+Blood_Sodium_24HPreDisch                                                          NaN
+Blood_Sodium_Discharge                                                            146
+Blood_Potassium_Admission                                                           3
+Blood_Potassium_24HPostAdm                                                        2.6
+Blood_Potassium_24HPreDisch                                                       NaN
+Blood_Potassium_Discharge                                                           4
+Blood_Creatinine_Admission                                                        118
+Blood_Creatinine_24HPostAdm                                                        61
+Blood_Creatinine_24HPreDisch                                                      NaN
+Blood_Creatinine_Discharge                                                         22
+Blood_DDimer_Admission                                                            NaN
+Blood_DDimer_24HPostAdm                                                           NaN
+Blood_DDimer_24HPreDisch                                                          NaN
+Blood_DDimer_Discharge                                                            NaN
+Blood_CRP_Admission                                                                32
+Blood_CRP_24HPostAdm                                                               55
+Blood_CRP_24HPreDisch                                                             NaN
+Blood_CRP_Discharge                                                                12
+Blood_Albumin_Admission                                                            32
+Blood_Albumin_24HPostAdm                                                           23
+Blood_Albumin_24HPreDisch                                                         NaN
+Blood_Albumin_Discharge                                                            25
+Blood_WhiteCount_Admission                                                        8.2
+Blood_WhiteCount_24HPostAdm                                                       4.9
+Blood_WhiteCount_24HPreDisch                                                      NaN
+Blood_WhiteCount_Discharge                                                        7.8
+VBG_Temperature_Admission                                                        37.5
+VBG_Temperature_24HPostAdm                                                       36.6
+VBG_Temperature_24HPreDisch                                                       NaN
+VBG_Temperature_Discharge                                                        36.7
+VBG_pCO2_Admission                                                                5.6
+VBG_pCO2_24HPostAdm                                                               6.2
+VBG_pCO2_24HPreDisch                                                              NaN
+VBG_pCO2_Discharge                                                                6.2
+VBG_pCO2_Corrected_Admission                                                      6.0
+VBG_pCO2_Corrected_24HPostAdm                                                     6.0
+VBG_pCO2_Corrected_24HPreDisch                                                    NaN
+VBG_pCO2_Corrected_Discharge                                                      6.0
+VBG_PH_Admission                                                                  7.5
+VBG_PH_24HPostAdm                                                                7.42
+VBG_PH_24HPreDisch                                                                NaN
+VBG_PH_Discharge                                                                 7.48
+VBG_PH_Corrected_Admission                                                       7.49
+VBG_PH_Corrected_24HPostAdm                                                      7.43
+VBG_PH_Corrected_24HPreDisch                                                      NaN
+VBG_PH_Corrected_Discharge                                                       7.48
+VBG_O2_Admission                                                                  7.2
+VBG_O2_24HPostAdm                                                                 4.0
+VBG_O2_24HPreDisch                                                                NaN
+VBG_O2_Discharge                                                                    6
+VBG_O2_Corrected_Admission                                                        7.5
+VBG_O2_Corrected_24HPostAdm                                                       3.9
+VBG_O2_Corrected_24HPreDisch                                                      NaN
+VBG_O2_Corrected_Discharge                                                        5.9
+NEWS_RespiratoryRate_Admission                                                    2.0
+NEWS_BreathingDevice_Admission                                                    0.0
+NEWS_O2Sat_Admission                                                              1.0
+NEWS_Temperature_Admission                                                        0.0
+NEWS_BP_Admission                                                                 1.0
+NEWS_HeartRate_Admission                                                          1.0
+NEWS_AVCPU_Admission                                                              0.0
+NEWS_Score_Admission                                                              5.0
+NEWS_RespiratoryRate_24HPostAdm                                                   0.0
+NEWS_BreathingDevice_24HPostAdm                                                   0.0
+NEWS_O2Sat_24HPostAdm                                                             0.0
+NEWS_Temperature_24HPostAdm                                                       0.0
+NEWS_BP_24HPostAdm                                                                1.0
+NEWS_HeartRate_24HPostAdm                                                         0.0
+NEWS_AVCPU_24HPostAdm                                                             0.0
+NEWS_Score_24HPostAdm                                                             1.0
+NEWS_RespiratoryRate_24HPreDisch                                                  0.0
+NEWS_BreathingDevice_24HPreDisch                                                  0.0
+NEWS_O2Sat_24HPreDisch                                                            0.0
+NEWS_Temperature_24HPreDisch                                                      0.0
+NEWS_BP_24HPreDisch                                                               1.0
+NEWS_HeartRate_24HPreDisch                                                        2.0
+NEWS_AVCPU_24HPreDisch                                                            0.0
+NEWS_Score_24HPreDisch                                                            3.0
+NEWS_RespiratoryRate_Discharge                                                    0.0
+NEWS_BreathingDevice_Discharge                                                    0.0
+NEWS_O2Sat_Discharge                                                              0.0
+NEWS_Temperature_Discharge                                                        0.0
+NEWS_BP_Discharge                                                                 1.0
+NEWS_HeartRate_Discharge                                                          2.0
+NEWS_AVCPU_Discharge                                                              0.0
+NEWS_Score_Discharge                                                              3.0
+
+\end{verbatim}
+
+\end{document}
+
+%%
+%% End of file
